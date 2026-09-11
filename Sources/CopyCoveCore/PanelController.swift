@@ -49,6 +49,7 @@ public final class PanelController: NSObject {
 
         panel.alphaValue = 0
         panel.makeKeyAndOrderFront(nil)
+        panel.invalidateShadow()
         NSAnimationContext.runAnimationGroup({ context in
             context.duration = 0.15
             context.timingFunction = CAMediaTimingFunction(name: .easeOut)
@@ -85,22 +86,18 @@ public final class PanelController: NSObject {
             self?.onPaste?(item)
         }
         let hosting = NSHostingView(rootView: view)
-        // 深色烟熏玻璃上必须白字：preferredColorScheme 在 macOS 不可靠，
-        // 直接锁 hosting 视图的外观为深色
-        hosting.appearance = NSAppearance(named: .darkAqua)
-
-        // macOS 26 系统液态玻璃本体：整个面板内容嵌入真实玻璃渲染。
-        // 控制中心深色瓷砖同款配方：regular 玻璃 + 固定深色 tint（烟熏黑），
-        // SwiftUI 侧 .preferredColorScheme(.dark) 强制白字
-        // 控制中心深色瓷砖同款配方：regular 玻璃 + 深烟熏 tint，
-        // SwiftUI 侧 .preferredColorScheme(.dark) 强制白字
+        // Regular glass provides adaptive contrast over desktop content.
+        // Keep a single glass surface; nested clear glass exposes background text.
         let glass = NSGlassEffectView()
         glass.cornerRadius = 18
-        glass.style = .clear
-        // 控制中心玻璃的光学行为（实测参考图：把背景压向中间调 ~100，纹理保留）
-        // .clear 基底 + 中灰 tint：暗处提亮、亮处压暗
-        glass.tintColor = NSColor(white: 0.42, alpha: 0.45)
+        glass.style = .regular
         glass.contentView = hosting
+        // Clip the backing surface as well as the glass material. Otherwise the
+        // borderless window can retain rectangular corners behind the glass.
+        glass.wantsLayer = true
+        glass.layer?.cornerRadius = glass.cornerRadius
+        glass.layer?.cornerCurve = .continuous
+        glass.layer?.masksToBounds = true
 
         let panel = CopyCovePanel(contentRect: NSRect(x: 0, y: 0, width: panelWidth, height: 200),
                                   styleMask: [.nonactivatingPanel, .borderless],
