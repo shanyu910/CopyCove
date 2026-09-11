@@ -30,9 +30,9 @@ public struct HistoryPanelView: View {
                 .frame(maxWidth: .infinity, minHeight: 120)
             } else {
                 VStack(spacing: 2) {
-                    ForEach(Array(viewModel.items.enumerated()), id: \.element.id) { index, item in
-                        HistoryRowView(item: item, index: index,
-                                       isSelected: index == viewModel.selectedIndex,
+                    ForEach(viewModel.items) { item in
+                        HistoryRowView(item: item,
+                                       isSelected: item.id == viewModel.items[viewModel.selectedIndex].id,
                                        imageProvider: imageProvider)
                             .contentShape(Rectangle())
                             .onTapGesture { onPasteItem(item) }

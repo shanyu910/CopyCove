@@ -3,13 +3,10 @@ import SwiftUI
 
 public struct HistoryRowView: View {
     let item: ClipItem
-    let index: Int
     let isSelected: Bool
     let imageProvider: (String) -> NSImage?
 
     @State private var hovered = false
-
-    private var hotkeyBadge: String { index == 9 ? "0" : String(index + 1) }
 
     public var body: some View {
         HStack(spacing: 10) {
@@ -38,14 +35,6 @@ public struct HistoryRowView: View {
             }
 
             Spacer(minLength: 8)
-
-            Text(hotkeyBadge)
-                .font(.system(size: 10, design: .monospaced))
-                .foregroundStyle(.white.opacity(0.75))
-                .shadow(color: .black.opacity(0.4), radius: 1.5, x: 0, y: 1)
-                .frame(width: 16, height: 16)
-                .background(Circle().fill(.white.opacity(0.10)))
-                .overlay(Circle().strokeBorder(.white.opacity(0.18)))
 
             Text(RelativeTime.string(from: item.createdAt))
                 .font(.system(size: 11))
