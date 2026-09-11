@@ -9,6 +9,7 @@ clipItemBuilderTests()
 persistenceTests()
 historyStoreTests()
 clipboardMonitorTests()
+pasteServiceTests()
 
 print("\n\(MiniTest.passed) passed, \(MiniTest.failed) failed")
 if MiniTest.failed > 0 { exit(1) }
