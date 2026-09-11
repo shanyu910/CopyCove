@@ -123,17 +123,12 @@ public final class PanelController: NSObject {
         return panel
     }
 
-    /// 面板中心：屏幕水平居中、垂直上 1/3 处；自检模式移到右侧彩色内容上便于验证玻璃
+    /// 面板中心：屏幕水平居中、垂直上 1/3 处
     private func position(_ panel: CopyCovePanel) {
         guard let screen = NSScreen.main else { return }
         let visible = screen.visibleFrame
         let size = panel.frame.size
-        let centerX: CGFloat
-        if keepsVisible {
-            centerX = visible.maxX - size.width / 2 - 60
-        } else {
-            centerX = visible.midX
-        }
+        let centerX = visible.midX
         let centerY = visible.maxY - visible.height / 3
         panel.setFrame(NSRect(x: centerX - size.width / 2,
                               y: centerY - size.height / 2,
