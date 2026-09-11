@@ -97,7 +97,9 @@ public final class PanelController: NSObject {
         let glass = NSGlassEffectView()
         glass.cornerRadius = 18
         glass.style = .regular
-        glass.tintColor = NSColor(white: 0.08, alpha: 0.9)
+        // 玻璃材质底 + tint 都锁深色，才有控制中心深色瓷砖的烟熏感
+        glass.appearance = NSAppearance(named: .darkAqua)
+        glass.tintColor = NSColor(white: 0.08, alpha: 0.75)
         glass.contentView = hosting
 
         let panel = CopyCovePanel(contentRect: NSRect(x: 0, y: 0, width: panelWidth, height: 200),
