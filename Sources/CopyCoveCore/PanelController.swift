@@ -85,12 +85,19 @@ public final class PanelController: NSObject {
             self?.onPaste?(item)
         }
         let hosting = NSHostingView(rootView: view)
+        // 深色烟熏玻璃上必须白字：preferredColorScheme 在 macOS 不可靠，
+        // 直接锁 hosting 视图的外观为深色
+        hosting.appearance = NSAppearance(named: .darkAqua)
 
         // macOS 26 系统液态玻璃本体：整个面板内容嵌入真实玻璃渲染。
-        // .clear 通透变体：更大程度透出背后内容（regular 在白底上偏"白雾"）
+        // 控制中心深色瓷砖同款配方：regular 玻璃 + 固定深色 tint（烟熏黑），
+        // SwiftUI 侧 .preferredColorScheme(.dark) 强制白字
+        // 控制中心深色瓷砖同款配方：regular 玻璃 + 深烟熏 tint，
+        // SwiftUI 侧 .preferredColorScheme(.dark) 强制白字
         let glass = NSGlassEffectView()
         glass.cornerRadius = 18
-        glass.style = .clear
+        glass.style = .regular
+        glass.tintColor = NSColor(white: 0.08, alpha: 0.9)
         glass.contentView = hosting
 
         let panel = CopyCovePanel(contentRect: NSRect(x: 0, y: 0, width: panelWidth, height: 200),
