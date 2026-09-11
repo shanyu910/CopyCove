@@ -15,13 +15,15 @@ public struct HistoryRowView: View {
         HStack(spacing: 10) {
             Image(systemName: item.kind == .text ? "doc.plaintext" : "photo")
                 .font(.system(size: 13))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.white.opacity(0.85))
+                .shadow(color: .black.opacity(0.4), radius: 1.5, x: 0, y: 1)
                 .frame(width: 16)
 
             if item.kind == .text {
                 Text(verbatim: item.text ?? "")
                     .font(.system(size: 13))
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(.white)
+                    .shadow(color: .black.opacity(0.45), radius: 2, x: 0, y: 1)
                     .lineLimit(2)
             } else if let fileName = item.imageFileName, let image = imageProvider(fileName) {
                 Image(nsImage: image)
@@ -39,14 +41,16 @@ public struct HistoryRowView: View {
 
             Text(hotkeyBadge)
                 .font(.system(size: 10, design: .monospaced))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.white.opacity(0.75))
+                .shadow(color: .black.opacity(0.4), radius: 1.5, x: 0, y: 1)
                 .frame(width: 16, height: 16)
                 .background(Circle().fill(.white.opacity(0.10)))
                 .overlay(Circle().strokeBorder(.white.opacity(0.18)))
 
             Text(RelativeTime.string(from: item.createdAt))
                 .font(.system(size: 11))
-                .foregroundStyle(.tertiary)
+                .foregroundStyle(.white.opacity(0.7))
+                .shadow(color: .black.opacity(0.4), radius: 1.5, x: 0, y: 1)
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 8)

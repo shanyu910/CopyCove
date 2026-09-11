@@ -96,11 +96,10 @@ public final class PanelController: NSObject {
         // SwiftUI 侧 .preferredColorScheme(.dark) 强制白字
         let glass = NSGlassEffectView()
         glass.cornerRadius = 18
-        glass.style = .regular
-        // 玻璃材质底 + tint 都锁深色，才有控制中心深色瓷砖的烟熏感
-        glass.appearance = NSAppearance(named: .darkAqua)
-        // 低 tint：保持深色身份的同时让背景清晰透出（控制中心的通透感）
-        glass.tintColor = NSColor(white: 0.08, alpha: 0.15)
+        glass.style = .clear
+        // 控制中心玻璃的光学行为（实测参考图：把背景压向中间调 ~100，纹理保留）
+        // .clear 基底 + 中灰 tint：暗处提亮、亮处压暗
+        glass.tintColor = NSColor(white: 0.42, alpha: 0.45)
         glass.contentView = hosting
 
         let panel = CopyCovePanel(contentRect: NSRect(x: 0, y: 0, width: panelWidth, height: 200),
