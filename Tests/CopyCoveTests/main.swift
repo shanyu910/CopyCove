@@ -7,6 +7,7 @@ print("Running CopyCoveTests...")
 relativeTimeTests()
 clipItemBuilderTests()
 persistenceTests()
+historyStoreTests()
 
 print("\n\(MiniTest.passed) passed, \(MiniTest.failed) failed")
 if MiniTest.failed > 0 { exit(1) }
