@@ -85,12 +85,19 @@ public final class PanelController: NSObject {
             self?.onPaste?(item)
         }
         let hosting = NSHostingView(rootView: view)
-        hosting.wantsLayer = true
+
+        // macOS 26 系统液态玻璃本体：整个面板内容嵌入真实玻璃渲染
+        let glass = NSGlassEffectView()
+        glass.cornerRadius = 18
+        glass.style = .regular
+        // 轻微中性 tint：纯白窗口前也能显出玻璃材质感（不然与白底融为一体）
+        glass.tintColor = NSColor.systemGray.withAlphaComponent(0.25)
+        glass.contentView = hosting
 
         let panel = CopyCovePanel(contentRect: NSRect(x: 0, y: 0, width: panelWidth, height: 200),
                                   styleMask: [.nonactivatingPanel, .borderless],
                                   backing: .buffered, defer: false)
-        panel.contentView = hosting
+        panel.contentView = glass
         panel.isFloatingPanel = true
         panel.level = .floating
         panel.backgroundColor = .clear
