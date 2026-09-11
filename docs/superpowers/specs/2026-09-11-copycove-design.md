@@ -86,7 +86,8 @@ struct ClipItem: Codable, Identifiable, Equatable {
 ## 面板交互（核心体验）
 
 - **呼出**：⌘; 在屏幕水平居中、垂直约上 1/3 处呼出；再按 ⌘; 或 Esc 关闭
-- **视觉**：毛玻璃材质（`NSVisualEffectView` / `.ultraThinMaterial`）、圆角、细边框、轻微浮现（fade + scale）动画；整体观感对标 Raycast 的克制风格
+- **视觉**：Tahoe 风格通透质感——面板背景用系统材质（`NSVisualEffectView` / `.ultraThinMaterial`）、圆角、细边框、轻微浮现（fade + scale）动画；选中行高亮、图标底座等小面积元素尝试 `.glassEffect()`（macOS 26 Liquid Glass API）点缀，实测不佳则退回材质。**不整面使用 Liquid Glass**：面板必须 non-activating（不抢焦点），而 `.glassEffect` 在应用失焦时会退化为普通模糊（社区已知未解问题），material 打底保证任何状态下观感一致
+- **部署目标**：macOS 26.0（自用，开发机为 macOS 26.6.2）
 - **布局**：无标题栏、无搜索框；最多 10 行列表
 - **每行**：类型小图标（文本/图片）+ 内容预览（文本截断至多两行；图片小缩略图）+ 相对时间（“刚刚 / 5 分钟前 / 3 小时前 / 昨天 / 具体日期”）
 - **键盘**：
