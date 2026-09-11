@@ -99,7 +99,8 @@ public final class PanelController: NSObject {
         glass.style = .regular
         // 玻璃材质底 + tint 都锁深色，才有控制中心深色瓷砖的烟熏感
         glass.appearance = NSAppearance(named: .darkAqua)
-        glass.tintColor = NSColor(white: 0.08, alpha: 0.75)
+        // 低 tint：保持深色身份的同时让背景清晰透出（控制中心的通透感）
+        glass.tintColor = NSColor(white: 0.08, alpha: 0.15)
         glass.contentView = hosting
 
         let panel = CopyCovePanel(contentRect: NSRect(x: 0, y: 0, width: panelWidth, height: 200),
@@ -123,12 +124,12 @@ public final class PanelController: NSObject {
         return panel
     }
 
-    /// 面板中心：屏幕水平居中、垂直上 1/3 处
+    /// 面板中心：屏幕水平居中、垂直上 1/3 处；自检模式移到右侧（壁纸/窗口交界）便于验证玻璃
     private func position(_ panel: CopyCovePanel) {
         guard let screen = NSScreen.main else { return }
         let visible = screen.visibleFrame
         let size = panel.frame.size
-        let centerX = visible.midX
+        let centerX = keepsVisible ? visible.maxX - size.width / 2 - 60 : visible.midX
         let centerY = visible.maxY - visible.height / 3
         panel.setFrame(NSRect(x: centerX - size.width / 2,
                               y: centerY - size.height / 2,
