@@ -1,6 +1,7 @@
 import AppKit
 import ApplicationServices
 import Foundation
+import ServiceManagement
 
 public final class AppDelegate: NSObject, NSApplicationDelegate {
     private let storage = DiskStore()
