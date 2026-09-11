@@ -6,6 +6,8 @@ public struct HistoryPanelView: View {
     let imageProvider: (String) -> NSImage?
     let onPasteItem: (ClipItem) -> Void
 
+    private let cornerRadius: CGFloat = 18
+
     public init(viewModel: HistoryViewModel,
                 imageProvider: @escaping (String) -> NSImage?,
                 onPasteItem: @escaping (ClipItem) -> Void) {
@@ -36,15 +38,38 @@ public struct HistoryPanelView: View {
                             .onTapGesture { onPasteItem(item) }
                     }
                 }
-                .padding(8)
+                .padding(10)
             }
         }
         .frame(width: 420)
-        .background(.ultraThinMaterial,
-                    in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .background {
+            // 玻璃层：vibrancy 打底 + 饱和度增强（液态玻璃会放大背景色彩）
+            // + 极浅 tint + 顶部镜面高光
+            ZStack {
+                LiquidBackground()
+                    .saturation(1.35)
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                    .fill(.white.opacity(0.05))
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                    .fill(LinearGradient(colors: [.white.opacity(0.16), .white.opacity(0.0)],
+                                         startPoint: .top, endPoint: UnitPoint(x: 0.5, y: 0.4)))
+            }
+            .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+        }
         .overlay(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .strokeBorder(.separator, lineWidth: 1)
+            // rim light：上亮下微亮，模拟玻璃厚度与光泽
+            RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                .strokeBorder(
+                    LinearGradient(stops: [
+                        .init(color: .white.opacity(0.50), location: 0.0),
+                        .init(color: .white.opacity(0.08), location: 0.35),
+                        .init(color: .white.opacity(0.02), location: 0.75),
+                        .init(color: .white.opacity(0.18), location: 1.0),
+                    ], startPoint: .top, endPoint: .bottom),
+                    lineWidth: 1
+                )
         )
+        .shadow(color: .black.opacity(0.22), radius: 16, x: 0, y: 8)
+        .padding(16) // 给窗内阴影留出呼吸空间
     }
 }

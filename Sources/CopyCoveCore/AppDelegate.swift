@@ -53,7 +53,13 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
                                      onQuit: { NSApp.terminate(nil) })
         statusBar?.install()
 
-        if !AXIsProcessTrusted() {
+        if CommandLine.arguments.contains("--show-panel") {
+            // 视觉自检：自动唤出面板且不因失焦隐藏，不弹权限引导
+            panelController.keepsVisible = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { [weak self] in
+                self?.panelController.show()
+            }
+        } else if !AXIsProcessTrusted() {
             showAccessibilityGuide()
         }
     }

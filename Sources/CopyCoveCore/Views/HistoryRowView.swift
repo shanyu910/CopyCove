@@ -28,14 +28,21 @@ public struct HistoryRowView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 26, height: 26)
-                    .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+                    .clipShape(RoundedRectangle(cornerRadius: 5, style: .continuous))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 5, style: .continuous)
+                            .strokeBorder(.white.opacity(0.22))
+                    )
             }
 
             Spacer(minLength: 8)
 
             Text(hotkeyBadge)
-                .font(.system(size: 11, design: .monospaced))
-                .foregroundStyle(.quaternary)
+                .font(.system(size: 10, design: .monospaced))
+                .foregroundStyle(.secondary)
+                .frame(width: 16, height: 16)
+                .background(Circle().fill(.white.opacity(0.10)))
+                .overlay(Circle().strokeBorder(.white.opacity(0.18)))
 
             Text(RelativeTime.string(from: item.createdAt))
                 .font(.system(size: 11))
@@ -45,9 +52,14 @@ public struct HistoryRowView: View {
         .padding(.vertical, 8)
         .frame(maxWidth: .infinity, minHeight: 30, alignment: .leading)
         .background {
+            // 半透明玻璃胶囊，避免实心灰块
             if isSelected || hovered {
-                RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .fill(.quaternary.opacity(isSelected ? 0.9 : 0.4))
+                RoundedRectangle(cornerRadius: 9, style: .continuous)
+                    .fill(.white.opacity(isSelected ? 0.13 : 0.06))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 9, style: .continuous)
+                            .strokeBorder(.white.opacity(isSelected ? 0.24 : 0.10))
+                    )
             }
         }
         .onHover { hovered = $0 }

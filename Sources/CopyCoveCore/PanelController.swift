@@ -10,6 +10,9 @@ final class CopyCovePanel: NSPanel {
 public final class PanelController: NSObject {
     public var onPaste: ((ClipItem) -> Void)?
 
+    /// 视觉自检模式：面板不因失焦自动隐藏
+    public var keepsVisible = false
+
     private let viewModel: HistoryViewModel
     private let imageProvider: (String) -> NSImage?
     private var panel: CopyCovePanel?
@@ -27,6 +30,7 @@ public final class PanelController: NSObject {
             forName: NSWindow.didResignKeyNotification, object: nil, queue: .main
         ) { [weak self] note in
             guard let self, note.object as? NSPanel === self.panel else { return }
+            guard !self.keepsVisible else { return }
             self.hide(animated: false)
         }
     }
