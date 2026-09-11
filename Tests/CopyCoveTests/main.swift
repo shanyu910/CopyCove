@@ -8,6 +8,7 @@ relativeTimeTests()
 clipItemBuilderTests()
 persistenceTests()
 historyStoreTests()
+clipboardMonitorTests()
 
 print("\n\(MiniTest.passed) passed, \(MiniTest.failed) failed")
 if MiniTest.failed > 0 { exit(1) }

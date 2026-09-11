@@ -1,6 +1,36 @@
 import AppKit
 import CopyCoveCore
 
+/// 测试用内存"剪贴板"，可编程模拟复制行为
+final class FakePasteboard: PasteboardProtocol {
+    var changeCount = 0
+    var types: [NSPasteboard.PasteboardType]?
+    private var storage: [NSPasteboard.PasteboardType: Any] = [:]
+
+    func string(forType type: NSPasteboard.PasteboardType) -> String? { storage[type] as? String }
+    func data(forType type: NSPasteboard.PasteboardType) -> Data? { storage[type] as? Data }
+    @discardableResult
+    func clearContents() -> Int { storage = [:]; types = nil; return 0 }
+    @discardableResult
+    func setString(_ string: String, forType type: NSPasteboard.PasteboardType) -> Bool {
+        storage[type] = string; return true
+    }
+    @discardableResult
+    func setData(_ data: Data?, forType type: NSPasteboard.PasteboardType) -> Bool {
+        storage[type] = data; return true
+    }
+
+    func simulateCopy(text: String) {
+        storage[.string] = text; types = [.string]; changeCount += 1
+    }
+    func simulateCopy(png: Data) {
+        storage[.png] = png; types = [.png]; changeCount += 1
+    }
+    func simulateConcealedCopy() {
+        types = [NSPasteboard.PasteboardType("org.nspasteboard.ConcealedType")]; changeCount += 1
+    }
+}
+
 /// 测试用内存持久化
 final class InMemoryStore: PersistenceStore {
     var items: [ClipItem] = []
