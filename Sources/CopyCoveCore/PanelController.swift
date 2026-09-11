@@ -86,12 +86,11 @@ public final class PanelController: NSObject {
         }
         let hosting = NSHostingView(rootView: view)
 
-        // macOS 26 系统液态玻璃本体：整个面板内容嵌入真实玻璃渲染
+        // macOS 26 系统液态玻璃本体：整个面板内容嵌入真实玻璃渲染。
+        // .clear 通透变体：更大程度透出背后内容（regular 在白底上偏"白雾"）
         let glass = NSGlassEffectView()
         glass.cornerRadius = 18
-        glass.style = .regular
-        // 轻微中性 tint：纯白窗口前也能显出玻璃材质感（不然与白底融为一体）
-        glass.tintColor = NSColor.systemGray.withAlphaComponent(0.25)
+        glass.style = .clear
         glass.contentView = hosting
 
         let panel = CopyCovePanel(contentRect: NSRect(x: 0, y: 0, width: panelWidth, height: 200),
@@ -115,12 +114,17 @@ public final class PanelController: NSObject {
         return panel
     }
 
-    /// 面板中心：屏幕水平居中、垂直上 1/3 处
+    /// 面板中心：屏幕水平居中、垂直上 1/3 处；自检模式移到右侧彩色内容上便于验证玻璃
     private func position(_ panel: CopyCovePanel) {
         guard let screen = NSScreen.main else { return }
         let visible = screen.visibleFrame
         let size = panel.frame.size
-        let centerX = visible.midX
+        let centerX: CGFloat
+        if keepsVisible {
+            centerX = visible.maxX - size.width / 2 - 60
+        } else {
+            centerX = visible.midX
+        }
         let centerY = visible.maxY - visible.height / 3
         panel.setFrame(NSRect(x: centerX - size.width / 2,
                               y: centerY - size.height / 2,
