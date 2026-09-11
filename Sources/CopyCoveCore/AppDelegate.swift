@@ -27,9 +27,12 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
                 self.store.add(item)
             }
         }
-        timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
+        // .common 模式：模态弹窗（权限引导等）期间也保持监听
+        let timer = Timer(timeInterval: 0.5, repeats: true) { [weak self] _ in
             self?.monitor.poll()
         }
+        RunLoop.main.add(timer, forMode: .common)
+        self.timer = timer
 
         panelController.onPaste = { [weak self] item in
             guard let self else { return }
@@ -56,6 +59,8 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
 
     /// 辅助功能权限引导（无权限则每次启动提示一次）
     private func showAccessibilityGuide() {
+        // 菜单栏应用从未激活过，模态弹窗前必须显式激活才会浮到前台
+        NSApp.activate(ignoringOtherApps: true)
         let alert = NSAlert()
         alert.alertStyle = .informational
         alert.messageText = "启用「选中即粘贴」"
