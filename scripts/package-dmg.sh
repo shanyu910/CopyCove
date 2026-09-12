@@ -4,6 +4,12 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+# 与 build-app.sh 一致：钉 SDK 26.5（CLT 27 的 SwiftUI 宏插件缺失）
+PINNED_SDK="/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk"
+if [ -d "$PINNED_SDK" ]; then
+    export SDKROOT="$PINNED_SDK"
+fi
+
 VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" resources/Info.plist)
 APP="build/CopyCove.app"
 DMG="build/CopyCove-$VERSION.dmg"
